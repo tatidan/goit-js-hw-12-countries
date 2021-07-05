@@ -1,3 +1,31 @@
 .input {
-  width: 600px;
+  width: 400px;
+  padding: 20px;
+  color: blue;
+  font-size: 25px;
+}
+.request {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 100px;
+
+  &__text {
+    font-size: 20px;
+  }
+}
+
+.response {
+  font-size: 25px;
+  text-align: center;
+}
+
+.country {
+  display: flex;
+  justify-content: space-evenly;
+
+  &__name {
+    text-align: center;
+  }
 }

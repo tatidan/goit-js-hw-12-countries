@@ -1,50 +1,51 @@
-//import './sass/main.scss';
-//import fetchCountries from "./fetchCountries";
-import config from './config.json';
-
-console.log('check connection');
-
-const getServerData = (path = '/') => {
-  return fetch(config.url + path)
-    .then(response => {
-      if (response.status !== 404) return response.json();
-      else return Promise.reject('REQUEST ERROR');
-    })
-    .catch(error => {
-      throw new Error(error);
-    });
-};
-
-getServerData('/rest/v2/name/france').then(data => console.log(data));
+import './sass/main.scss';
+import debounce from 'lodash.debounce';
+import countryTpl from './country.hbs';
+import fetchCountries from './fetchCountries';
 
 const inputRef = document.querySelector('.input');
-inputRef.addEventListener('input', onInputSearch);
+const responseRef = document.querySelector('.response');
 
-function onInputSearch(e) {
-  console.log(inputRef.value);
+inputRef.addEventListener(
+  'input',
+  debounce(() => {
+    const requestTmp = `/${inputRef.value}`;
+    fetchCountries(requestTmp).then(data => {
+      console.log(data);
+      renderCountries(data);
+    });
+  }, 500),
+);
+
+function renderCountries(countries) {
+  if (!inputRef.value) {
+    return;
+  }
+
+  if (countries.length === 1) {
+    responseRef.innerHTML = countryTpl(countries);
+  }
+
+  if (countries.length >= 2 && countries.length <= 10) {
+    const countriesList = countries.map(country => {
+      return `<li>${country.name}</li>`;
+    });
+    responseRef.innerHTML = countriesList.join('');
+  }
+
+  if (countries.length > 10) {
+    const message = `Слишком много стран содержат "${inputRef.value}". Уточните название для поиска страны.`;
+    responseRef.innerHTML = message;
+  }
 }
 
-// document.querySelector('input').addEventListener(
-//   'input',
-//   _.debounce(() => {
-//     console.log(inputRef.value);
-//   }, 500),
-// );
+//Для оповещений используй плагин pnotify.
 
-//на обработчик события необходимо применить подход
-//debounce и делать HTTP - запрос спустя 500мс после того,
-//как пользователь перестал вводить текст.
-//Используй npm - пакет lodash.debounce.
+// не работает обработчик ошибок:
+function errorHandler(error) {
+  const message = `Cтраны ${inputRef.value} не существует. Введите другое название.`;
+  responseRef.innerHTML = message;
+}
 
-//lodash установлен
-
-// const returnedFunction = debounce(function () {
-//   // All the taxing stuff you do
-// }, 250);
-// window.addEventListener('resize', returnedFunction);
-
-//нужно связать inputRef.value и поиск в списке стран
-
-const responseNode = document.querySelector('.response');
-console.log(responseNode);
-//responseNode.innerHTML('список стран');
+//// в languages массив, нужно в каждом элементе массива, объекте, взять значение ключа name
+////{...languages}.name
