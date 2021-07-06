@@ -5,10 +5,15 @@
     <div>
       <img src='{{flag}}' alt='{{name}}' width='450' />
     </div>
-    <div>
+    <div class='country__details'>
       <p><b>Capital: </b>{{capital}}</p>
       <p><b>Population: </b>{{population}} inhabitants</p>
-      <p><b>Languages: </b>{{languages.name}}</p>
+      <b>Languages: </b>
+      <ul>
+        {{#each languages}}
+          <li>{{name}}</li>
+        {{/each}}
+      </ul>
     </div>
 
   </div>

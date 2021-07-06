@@ -43,4 +43,13 @@
 .country__name {
   text-align: center;
 }
+
+.country__details {
+  text-align: left;
+}
+
+.country__list {
+  text-align: left;
+  margin-left: 30%;
+}
 /*# sourceMappingURL=main.css.map */
